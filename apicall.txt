@@ -1,0 +1,44 @@
+//aipConfig: Interface
+
+    @FormUrlEncoded
+    @POST("postimei")
+    Call<ImeiModel> getIMEI(@Field("imei") String imei);
+
+//apiConfig: Class
+
+ private static String BASE_URL = "http://192.168.1.200/new_api/";
+
+    static Retrofit getRetrofit() {
+
+        return new Retrofit.Builder()
+                .baseUrl(AppConfig.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
+
+//apicalling:
+
+  ApiConfig apiConfig;
+  apiConfig = AppConfig.getRetrofit().create(ApiConfig.class);
+
+ private void apicall() {
+
+        Call<ImeiModel> call = apiConfig.getIMEI(imei);
+        call.enqueue(new Callback<ImeiModel>() {
+            @Override
+            public void onResponse(Call<ImeiModel> call, retrofit2.Response<ImeiModel> response) {
+                Log.e(TAG, "onResponse: " + response.body().getImei() + "fhhdkfj" + response.body().getStatus());
+                if(response.body().getStatus()==0){
+                    startActivity(new Intent(IMEI_Permission.this,MainActivity.class));
+                }
+                else {
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ImeiModel> call, Throwable t) {
+                Log.e(TAG, "onFailure: " );
+            }
+        });
+    }
