@@ -1,0 +1,58 @@
+    implementation 'com.google.android.gms:play-services-ads:15.0.1'
+
+	Banner-->
+	
+   <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="@string/banner_home_footer">
+    </com.google.android.gms.ads.AdView>
+	
+	
+	private AdView adView;
+    private AdRequest adRequest;
+	  private void add() {
+        adView = (AdView) findViewById(R.id.adView);
+        MobileAds.initialize(getApplicationContext(), getString(R.string.banner_home_footer));
+        adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+    }
+		
+		
+		
+		 Handler handler;
+    InterstitialAd mInterstitialAd;
+    Runnable finalizer;
+		 private void InterstitialAdd() {
+        handler = new Handler();
+
+        mInterstitialAd = new InterstitialAd(getActivity());
+
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+
+
+                handler.postDelayed(finalizer = new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 100ms
+                        if (mInterstitialAd.isLoaded()) {
+                            mInterstitialAd.show();
+                        }
+                    }
+                }, 5000);
+
+            }
+        });
+    }
+		
